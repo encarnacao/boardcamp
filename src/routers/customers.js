@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { postCustomer } from "../controllers/customers.js";
+import { getCustomers, postCustomer } from "../controllers/customers.js";
 import {
 	checkCustomerConflict,
 	validateCustomer,
@@ -13,5 +13,7 @@ router.post(
 	checkCustomerConflict,
 	postCustomer
 );
+
+router.get("/customers", getCustomers);
 
 export default router;
