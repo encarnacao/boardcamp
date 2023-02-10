@@ -37,6 +37,7 @@ async function checkGameId(req, res, next) {
 		} else if (rows[0]?.stockTotal < 1) {
 			return res.status(400).send("Game out of stock");
 		}
+		res.locals.game = rows[0];
 		next();
 	} catch (error) {
 		console.log(error);
