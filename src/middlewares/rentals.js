@@ -29,9 +29,13 @@ async function checkCustomerId(req, res, next) {
 async function checkGameId(req, res, next) {
 	try {
 		const { gameId } = req.body;
-		const { rows } = await db.query("SELECT * FROM games WHERE id = $1", [ gameId ]);
-		if(rows.length === 0 || rows[0]?.stockTotal < 1) {
-			return res.sendStatus(400);
+		const { rows } = await db.query("SELECT * FROM games WHERE id = $1", [
+			gameId,
+		]);
+		if (rows.length === 0) {
+			return res.status(400).send("Invalid Game ID");
+		} else if (rows[0]?.stockTotal < 1) {
+			return res.status(400).send("Game out of stock");
 		}
 		next();
 	} catch (error) {
