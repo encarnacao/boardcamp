@@ -1,4 +1,4 @@
-import gameSchema from "../schemas/games";
+import gameSchema from "../schemas/games.js";
 
 function validateGame(req, res, next) {
 	const { error } = gameSchema.validate(req.body);

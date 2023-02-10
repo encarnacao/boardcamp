@@ -1,4 +1,4 @@
-import customerSchema from "../schemas/customers";
+import customerSchema from "../schemas/customers.js";
 
 function validateCustomer(req, res, next) {
 	const { error } = customerSchema.validate(req.body);
