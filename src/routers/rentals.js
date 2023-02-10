@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { postRental } from "../controllers/rentals.js";
+import { getRentals, postRental } from "../controllers/rentals.js";
 import {
 	validateRental,
 	checkCustomerId,
@@ -15,5 +15,7 @@ router.post(
 	checkGameId,
 	postRental
 );
+
+router.get("/rentals", getRentals)
 
 export default router;

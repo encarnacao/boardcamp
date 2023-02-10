@@ -51,4 +51,22 @@ async function postRental(req, res) {
 	}
 }
 
-export { postRental };
+async function getRentals(_, res) {
+	try {
+		const { rows } = await db.query(`
+        SELECT
+        rentals.*,
+        JSON_BUILD_OBJECT('id', customers.id, 'name', customers.name) AS customer,
+        JSON_BUILD_OBJECT('id', games.id, 'name', games.name) AS game
+        FROM rentals
+        JOIN customers ON rentals."customerId" = customers.id
+        JOIN games ON rentals."gameId" = games.id;
+    `);
+		res.send(rows);
+	} catch (error) {
+		console.log(error);
+		res.sendStatus(500);
+	}
+}
+
+export { postRental, getRentals };
