@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import gamesRouter from "./routers/games.js";
 import customerRouter from "./routers/customers.js";
+import rentalsRouter from "./routers/rentals.js";
 
 dotenv.config();
 
@@ -12,6 +13,7 @@ app.use(cors());
 app.use(express.json());
 app.use(gamesRouter);
 app.use(customerRouter);
+app.use(rentalsRouter);
 
 app.get("/", (_, res) => {
 	res.send("Hello World!");
