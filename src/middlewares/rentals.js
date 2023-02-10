@@ -26,4 +26,18 @@ async function checkCustomerId(req, res, next) {
 	}
 }
 
-export { validateRental, checkCustomerId };
+async function checkGameId(req, res, next) {
+	try {
+		const { gameId } = req.body;
+		const { rows } = await db.query("SELECT * FROM games WHERE id = $1", [ gameId ]);
+		if(rows.length === 0 || rows[0]?.stockTotal < 1) {
+			return res.sendStatus(400);
+		}
+		next();
+	} catch (error) {
+		console.log(error);
+		return res.sendStatus(500);
+	}
+}
+
+export { validateRental, checkCustomerId, checkGameId };
