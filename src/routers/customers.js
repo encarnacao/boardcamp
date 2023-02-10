@@ -3,6 +3,7 @@ import {
 	getCustomerById,
 	getCustomers,
 	postCustomer,
+	updateCustomer,
 } from "../controllers/customers.js";
 import {
 	checkCustomerConflict,
@@ -22,5 +23,13 @@ router.post(
 router.get("/customers", getCustomers);
 
 router.get("/customers/:id", checkCustomerId, getCustomerById);
+
+router.put(
+	"/customers/:id",
+	validateCustomer,
+	checkCustomerId,
+	checkCustomerConflict,
+	updateCustomer
+);
 
 export default router;
