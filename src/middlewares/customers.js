@@ -30,7 +30,8 @@ async function checkCustomerConflict(req, res, next) {
 async function checkCustomerId(req, res, next) {
 	try {
 		const id = req.params.id;
-		if (isNaN(id)) return res.sendStatus(422);
+		if (isNaN(id) || !Number.isInteger(Number(id)))
+			return res.status(422).send("Invalid ID, must be an integer");
 		next();
 	} catch {
 		console.log(error);
