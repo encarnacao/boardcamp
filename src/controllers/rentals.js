@@ -43,6 +43,7 @@ async function postRental(req, res) {
 				null,
 			]
 		);
+		await removeFromStock(gameId);
 		res.sendStatus(201);
 	} catch (error) {
 		console.log(error);
