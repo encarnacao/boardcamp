@@ -1,7 +1,12 @@
 import { Router } from "express";
-import { getCustomers, postCustomer } from "../controllers/customers.js";
+import {
+	getCustomerById,
+	getCustomers,
+	postCustomer,
+} from "../controllers/customers.js";
 import {
 	checkCustomerConflict,
+	checkCustomerId,
 	validateCustomer,
 } from "../middlewares/customers.js";
 
@@ -15,5 +20,7 @@ router.post(
 );
 
 router.get("/customers", getCustomers);
+
+router.get("/customers/:id", checkCustomerId, getCustomerById);
 
 export default router;

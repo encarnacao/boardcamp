@@ -5,7 +5,7 @@ function validateCustomer(req, res, next) {
 	const { error } = customerSchema.validate(req.body);
 	if (error) {
 		const errorMessage = error.details.map((err) => err.message).join(", ");
-		return res.status(422).send(errorMessage);
+		return res.status(400).send(errorMessage);
 	}
 	next();
 }
@@ -27,4 +27,15 @@ async function checkCustomerConflict(req, res, next) {
 	}
 }
 
-export { validateCustomer, checkCustomerConflict };
+async function checkCustomerId(req, res, next) {
+	try {
+		const id = req.params.id;
+		if (isNaN(id)) return res.sendStatus(422);
+		next();
+	} catch {
+		console.log(error);
+		res.sendStatus(500);
+	}
+}
+
+export { validateCustomer, checkCustomerConflict, checkCustomerId };
