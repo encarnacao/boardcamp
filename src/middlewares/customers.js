@@ -17,11 +17,11 @@ async function checkCustomerConflict(req, res, next) {
 			`SELECT * FROM customers WHERE cpf = $1`,
 			[cpf]
 		);
-		if (customer.rowCount > 0) {
+		if (customer.rowCount > 0 && customer.rows[0].cpf !== res.locals.customer?.cpf) {
 			return res.sendStatus(409);
 		}
 		next();
-	} catch {
+	} catch (error) {
 		console.log(error);
 		res.sendStatus(500);
 	}
