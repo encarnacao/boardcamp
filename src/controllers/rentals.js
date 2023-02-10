@@ -1,6 +1,30 @@
 import dayjs from "dayjs";
 import { db } from "../database.connection.js";
 
+async function removeFromStock(gameId) {
+	try {
+		await db.query(
+			`UPDATE games SET "stockTotal" = "stockTotal" - 1 WHERE id = $1`,
+			[gameId]
+		);
+	} catch (error) {
+		console.log(error);
+		return res.sendStatus(500);
+	}
+}
+
+async function addToStock(gameId) {
+	try {
+		await db.query(
+			`UPDATE games SET "stockTotal" = "stockTotal" + 1 WHERE id = $1`,
+			[gameId]
+		);
+	} catch (error) {
+		console.log(error);
+		return res.sendStatus(500);
+	}
+}
+
 async function postRental(req, res) {
 	try {
 		const { customerId, gameId, daysRented } = req.body;
