@@ -4,7 +4,7 @@ import gameSchema from "../schemas/games.js";
 function validateGame(req, res, next) {
 	const { error } = gameSchema.validate(req.body);
 	if (error) {
-		const errorMessage = error.details.map((err) => err.message).join(", ");
+		const errorMessage = error.details[0].message;
 		return res.status(400).send(errorMessage);
 	}
 	next();
