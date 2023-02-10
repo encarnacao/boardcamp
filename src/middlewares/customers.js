@@ -10,7 +10,7 @@ function validateCustomer(req, res, next) {
 	next();
 }
 
-async function checkConflict(req, res, next) {
+async function checkCustomerConflict(req, res, next) {
 	try {
 		const { cpf } = req.body;
 		const customer = await db.query(
@@ -27,4 +27,4 @@ async function checkConflict(req, res, next) {
 	}
 }
 
-export { validateCustomer };
+export { validateCustomer, checkCustomerConflict };

@@ -10,7 +10,7 @@ function validateGame(req, res, next) {
 	next();
 }
 
-async function checkConflicts(req, res, next) {
+async function checkGameConflict(req, res, next) {
     const { name } = req.body;
     const games = await db.query("SELECT * FROM games WHERE name = $1", [name]);
     if (games.rowCount > 0) {
@@ -19,4 +19,4 @@ async function checkConflicts(req, res, next) {
     next();
 }
 
-export { validateGame, checkConflicts };
+export { validateGame, checkGameConflict };
