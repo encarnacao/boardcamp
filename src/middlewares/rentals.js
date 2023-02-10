@@ -1,4 +1,5 @@
 import rentalSchema from "../schemas/rentals.js";
+import { db } from "../database.connection.js";
 
 function validateRental(req, res, next) {
 	const { error } = rentalSchema.validate(req.body);
@@ -17,7 +18,7 @@ async function checkCustomerId(req, res, next) {
 			[customerId]
 		);
 		if (rows.length === 0) {
-			return res.sendStatus(400);
+			return res.status(400).send("Invalid Customer ID");
 		}
 		next();
 	} catch (error) {
