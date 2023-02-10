@@ -14,4 +14,14 @@ async function postCustomer(req, res) {
 	}
 }
 
-export { postCustomer };
+async function getCustomers(_, res) {
+	try {
+		const customers = await db.query("SELECT * FROM customers");
+		res.send(customers.rows);
+	} catch (error) {
+		console.log(error);
+		res.sendStatus(500);
+	}
+}
+
+export { postCustomer, getCustomers };
