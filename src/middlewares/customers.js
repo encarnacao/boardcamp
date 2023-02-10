@@ -32,8 +32,16 @@ async function checkCustomerId(req, res, next) {
 		const id = req.params.id;
 		if (isNaN(id) || !Number.isInteger(Number(id)))
 			return res.status(422).send("Invalid ID, must be an integer");
+		const { rows } = await db.query(
+			`SELECT * FROM customers WHERE id = $1`,
+			[id]
+		);
+		if (rows.length === 0) {
+			return res.sendStatus(404);
+		}
+		res.locals.customer = rows[0];
 		next();
-	} catch {
+	} catch (error) {
 		console.log(error);
 		res.sendStatus(500);
 	}

@@ -24,17 +24,9 @@ async function getCustomers(_, res) {
 	}
 }
 
-async function getCustomerById(req, res) {
+async function getCustomerById(_, res) {
 	try {
-		const id = req.params.id;
-		const customer = await db.query(
-			`SELECT * FROM customers WHERE id = $1`,
-			[id]
-		);
-		if (customer.rowCount === 0) {
-			return res.sendStatus(404);
-		}
-		res.status(200).send(customer.rows[0]);
+		res.status(200).send(res.locals.customer);
 	} catch (error) {
 		console.log(error);
 		res.sendStatus(500);
