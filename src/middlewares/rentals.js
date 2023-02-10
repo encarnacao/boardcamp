@@ -10,14 +10,20 @@ function validateRental(req, res, next) {
 }
 
 async function checkCustomerId(req, res, next) {
-	const { customerId } = req.body;
-	const { rows } = await db.query("SELECT * FROM customers WHERE id = $1", [
-		customerId,
-	]);
-	if (rows.length === 0) {
-		return res.sendStatus(400);
+	try {
+		const { customerId } = req.body;
+		const { rows } = await db.query(
+			"SELECT * FROM customers WHERE id = $1",
+			[customerId]
+		);
+		if (rows.length === 0) {
+			return res.sendStatus(400);
+		}
+		next();
+	} catch (error) {
+		console.log(error);
+		return res.sendStatus(500);
 	}
-	next();
 }
 
 export { validateRental, checkCustomerId };
