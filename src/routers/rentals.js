@@ -1,9 +1,14 @@
 import { Router } from "express";
-import { getRentals, postRental } from "../controllers/rentals.js";
+import {
+	deleteRental,
+	getRentals,
+	postRental,
+} from "../controllers/rentals.js";
 import {
 	validateRental,
 	checkCustomerId,
 	checkGameId,
+	checkRentalId,
 } from "../middlewares/rentals.js";
 
 const router = Router();
@@ -16,6 +21,8 @@ router.post(
 	postRental
 );
 
-router.get("/rentals", getRentals)
+router.get("/rentals", getRentals);
+
+router.delete("/rentals/:id", checkRentalId, deleteRental);
 
 export default router;

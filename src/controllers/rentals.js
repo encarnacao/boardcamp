@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import { db } from "../database.connection.js";
 
-
 async function postRental(req, res) {
 	try {
 		const { customerId, gameId, daysRented } = req.body;
@@ -45,4 +44,15 @@ async function getRentals(_, res) {
 	}
 }
 
-export { postRental, getRentals };
+async function deleteRental(req, res) {
+	try {
+		const { id } = req.params;
+		await db.query(`DELETE FROM rentals WHERE id = $1`, [id]);
+		res.sendStatus(200);
+	} catch (error) {
+		console.log(error);
+		res.sendStatus(500);
+	}
+}
+
+export { postRental, getRentals, deleteRental };
