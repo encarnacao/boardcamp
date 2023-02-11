@@ -6,7 +6,7 @@ async function getGames(req, res) {
 		const { name } = req.query;
 		let query = "SELECT * FROM games";
 		if (name) {
-			query += ` WHERE name ILIKE ${escape(`%${name}%`)}`;
+			query += ` WHERE name ILIKE ${escape(`${name}%`)}`;
 		}
 		const games = await db.query(query);
 		res.status(200).send(games.rows);
