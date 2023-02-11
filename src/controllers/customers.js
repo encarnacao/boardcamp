@@ -15,18 +15,20 @@ async function postCustomer(req, res) {
 	}
 }
 
-function buildCustomerQuery(cpf, offset, limit) {
+function buildCustomerQuery(cpf, offset, limit, order, desc) {
 	let query = "SELECT * FROM customers";
 	query += cpf ? ` WHERE cpf ILIKE ${escape(`${cpf}%`)}` : "";
 	query += offset ? ` OFFSET ${escape(offset)}` : "";
 	query += limit ? ` LIMIT ${escape(limit)}` : "";
+	query += order ? ` ORDER BY ${order}` : "";
+	query += desc === "true" ? ` DESC` : "";
 	return query;
 }
 
 async function getCustomers(req, res) {
 	try {
-		const { cpf, offset, limit } = req.query;
-		const query = buildCustomerQuery(cpf, offset, limit);
+		const { cpf, offset, limit, order, desc } = req.query;
+		const query = buildCustomerQuery(cpf, offset, limit, order, desc);
 		const customers = await db.query(query);
 		res.send(customers.rows);
 	} catch (error) {
