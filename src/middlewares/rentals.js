@@ -33,9 +33,13 @@ async function checkGameId(req, res, next) {
 		const { rows } = await db.query("SELECT * FROM games WHERE id = $1", [
 			gameId,
 		]);
+		const { rowCount } = await db.query(
+			`SELECT * FROM rentals WHERE "gameId" = $1 AND "returnDate" IS NULL`,
+			[gameId]
+		);
 		if (rows.length === 0) {
 			return res.status(400).send("Invalid Game ID");
-		} else if (rows[0]?.stockTotal < 1) {
+		} else if (rows[0].stockTotal === rowCount) {
 			return res.status(400).send("Game out of stock");
 		}
 		res.locals.game = rows[0];
