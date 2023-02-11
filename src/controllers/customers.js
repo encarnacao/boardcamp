@@ -1,4 +1,5 @@
 import { db } from "../database.connection.js";
+import { escape } from "mysql";
 
 async function postCustomer(req, res) {
 	try {
@@ -14,9 +15,14 @@ async function postCustomer(req, res) {
 	}
 }
 
-async function getCustomers(_, res) {
+async function getCustomers(req, res) {
 	try {
-		const customers = await db.query("SELECT * FROM customers");
+		const { cpf } = req.query;
+		let query = "SELECT * FROM customers";
+		if (cpf) {
+			query += ` WHERE cpf ILIKE ${escape(`${cpf}%`)}`;
+		}
+		const customers = await db.query(query);
 		res.send(customers.rows);
 	} catch (error) {
 		console.log(error);
