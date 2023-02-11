@@ -1,13 +1,18 @@
 import { db } from "../database.connection.js";
 import { escape } from "mysql";
 
+function buildGameQuery(name, offset, limit) {
+	let query = "SELECT * FROM games";
+	query += name ? ` WHERE name ILIKE ${escape(`${name}%`)}` : "";
+	query += offset ? ` OFFSET ${escape(offset)}` : "";
+	query += limit ? ` LIMIT ${escape(limit)}` : "";
+	return query;
+}
+
 async function getGames(req, res) {
 	try {
-		const { name } = req.query;
-		let query = "SELECT * FROM games";
-		if (name) {
-			query += ` WHERE name ILIKE ${escape(`${name}%`)}`;
-		}
+		const { name, offset, limit } = req.query;
+		let query = buildGameQuery(name, offset, limit);
 		const games = await db.query(query);
 		res.status(200).send(games.rows);
 	} catch (error) {

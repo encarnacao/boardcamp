@@ -15,13 +15,18 @@ async function postCustomer(req, res) {
 	}
 }
 
+function buildCustomerQuery(cpf, offset, limit) {
+	let query = "SELECT * FROM customers";
+	query += cpf ? ` WHERE cpf ILIKE ${escape(`${cpf}%`)}` : "";
+	query += offset ? ` OFFSET ${escape(offset)}` : "";
+	query += limit ? ` LIMIT ${escape(limit)}` : "";
+	return query;
+}
+
 async function getCustomers(req, res) {
 	try {
-		const { cpf } = req.query;
-		let query = "SELECT * FROM customers";
-		if (cpf) {
-			query += ` WHERE cpf ILIKE ${escape(`${cpf}%`)}`;
-		}
+		const { cpf, offset, limit } = req.query;
+		const query = buildCustomerQuery(cpf, offset, limit);
 		const customers = await db.query(query);
 		res.send(customers.rows);
 	} catch (error) {

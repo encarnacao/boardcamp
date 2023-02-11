@@ -45,7 +45,7 @@ async function postRental(req, res) {
 	}
 }
 
-function buildRentalQuery(customerId, gameId) {
+function buildRentalQuery(customerId, gameId, offset, limit) {
 	let query = `
         SELECT
         rentals.*,
@@ -56,21 +56,23 @@ function buildRentalQuery(customerId, gameId) {
         JOIN games ON rentals."gameId" = games.id
     	`;
 	const whereClause = [
-		customerId ? `customers.id = ${customerId}` : null,
-		gameId ? `games.id = ${gameId}` : null,
+		customerId ? `customers.id = ${escape(customerId)}` : null,
+		gameId ? `games.id = ${escape(gameId)}` : null,
 	]
 		.filter(Boolean)
 		.join(" AND ");
 	if (whereClause) {
 		query += ` WHERE ${whereClause}`;
 	}
+	query += offset ? ` OFFSET ${escape(offset)}` : "";
+	query += limit ? ` LIMIT ${escape(limit)}` : "";
 	return query;
 }
 
 async function getRentals(req, res) {
 	try {
-		const { customerId, gameId } = req.query;
-		const query = buildRentalQuery(customerId, gameId);
+		const { customerId, gameId, offset, limit } = req.query;
+		const query = buildRentalQuery(customerId, gameId, offset, limit);
 		const { rows } = await db.query(query);
 		res.send(rows);
 	} catch (error) {
