@@ -1,6 +1,24 @@
 import dayjs from "dayjs";
 import { db } from "../database.connection.js";
 
+function calculateDays(date1, date2) {
+	const days = dayjs(date2).diff(date1, "day");
+	return days;
+}
+
+function addDays(date, days) {
+	const newDate = dayjs(date).add(days, "day");
+	return newDate.$d;
+}
+
+function calculateFee(rentDate, days, price) {
+	const returnDate = addDays(rentDate, days);
+	const today = dayjs().format("YYYY-MM-DD");
+	const daysLate = calculateDays(returnDate, today);
+	const delayFee = daysLate > 0 ? daysLate * price : 0;
+	return delayFee;
+}
+
 async function postRental(req, res) {
 	try {
 		const { customerId, gameId, daysRented } = req.body;
