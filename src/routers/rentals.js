@@ -3,6 +3,7 @@ import {
 	deleteRental,
 	getRentals,
 	postRental,
+	returnRental,
 } from "../controllers/rentals.js";
 import {
 	validateRental,
@@ -24,5 +25,7 @@ router.post(
 router.get("/rentals", getRentals);
 
 router.delete("/rentals/:id", checkRentalId, deleteRental);
+
+router.post("/rentals/:id/return", checkRentalId, returnRental);
 
 export default router;
