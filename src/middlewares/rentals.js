@@ -58,8 +58,10 @@ async function checkRentalId(req, res, next) {
 		]);
 		if (rows.length === 0) {
 			return res.status(404).send("Invalid Rental ID");
-		} else if (rows[0].returnDate) {
+		} else if (rows[0].returnDate && req.method === "POST") {
 			return res.status(400).send("Rental already returned");
+		} else if (!rows[0].returnDate && req.method === "DELETE") {
+			return res.status(400).send("Rental not returned yet");
 		}
 		res.locals.rental = rows[0];
 		next();
