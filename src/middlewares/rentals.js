@@ -50,4 +50,22 @@ async function checkGameId(req, res, next) {
 	}
 }
 
-export { validateRental, checkCustomerId, checkGameId };
+async function checkRentalId(req, res, next) {
+	try {
+		const { id } = req.params;
+		const { rows } = await db.query("SELECT * FROM rentals WHERE id = $1", [
+			id,
+		]);
+		if (rows.length === 0) {
+			return res.status(404).send("Invalid Rental ID");
+		} else if (rows[0].returnDate !== null) {
+			return res.status(400).send("Rental already returned");
+		}
+		next();
+	} catch (error) {
+		console.log(error);
+		return res.sendStatus(500);
+	}
+}
+
+export { validateRental, checkCustomerId, checkGameId, checkRentalId };
