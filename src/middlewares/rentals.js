@@ -61,6 +61,7 @@ async function checkRentalId(req, res, next) {
 		} else if (rows[0].returnDate !== null) {
 			return res.status(400).send("Rental already returned");
 		}
+		res.locals.rental = rows[0];
 		next();
 	} catch (error) {
 		console.log(error);
