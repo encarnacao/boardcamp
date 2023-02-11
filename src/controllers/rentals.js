@@ -1,5 +1,6 @@
 import dayjs from "dayjs";
 import { db } from "../database.connection.js";
+import { escape } from "mysql";
 
 function calculateDays(date1, date2) {
 	const days = dayjs(date2).diff(date1, "day");
@@ -44,17 +45,33 @@ async function postRental(req, res) {
 	}
 }
 
-async function getRentals(_, res) {
-	try {
-		const { rows } = await db.query(`
+function buildRentalQuery(customerId, gameId) {
+	let query = `
         SELECT
         rentals.*,
         JSON_BUILD_OBJECT('id', customers.id, 'name', customers.name) AS customer,
         JSON_BUILD_OBJECT('id', games.id, 'name', games.name) AS game
         FROM rentals
         JOIN customers ON rentals."customerId" = customers.id
-        JOIN games ON rentals."gameId" = games.id;
-    `);
+        JOIN games ON rentals."gameId" = games.id
+    	`;
+	const whereClause = [
+		customerId ? `customers.id = ${customerId}` : null,
+		gameId ? `games.id = ${gameId}` : null,
+	]
+		.filter(Boolean)
+		.join(" AND ");
+	if (whereClause) {
+		query += ` WHERE ${whereClause}`;
+	}
+	return query;
+}
+
+async function getRentals(req, res) {
+	try {
+		const { customerId, gameId } = req.query;
+		const query = buildRentalQuery(customerId, gameId);
+		const { rows } = await db.query(query);
 		res.send(rows);
 	} catch (error) {
 		console.log(error);
