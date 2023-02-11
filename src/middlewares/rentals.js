@@ -58,7 +58,7 @@ async function checkRentalId(req, res, next) {
 		]);
 		if (rows.length === 0) {
 			return res.status(404).send("Invalid Rental ID");
-		} else if (rows[0].returnDate !== null) {
+		} else if (rows[0].returnDate) {
 			return res.status(400).send("Rental already returned");
 		}
 		res.locals.rental = rows[0];
