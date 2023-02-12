@@ -81,7 +81,6 @@ function buildRentalQuery(
 	query += limit ? ` LIMIT ${escape(limit)}` : "";
 	query += order ? ` ORDER BY "${order}"` : "";
 	query += desc === "true" ? ` DESC` : "";
-	console.log(query);
 	return query;
 }
 
